@@ -1,3 +1,6 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+* Initial release of the `privacy_lens` package.
+* Added `PrivacyLens` widget for selective UI masking.
+* Implemented `blurStrength` and `isProtected` properties for customizable security.
+* Added support for Flutter-based applications.
