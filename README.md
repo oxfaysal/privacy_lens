@@ -14,7 +14,7 @@
 ---
 
 ## Preview
-![Privacy Lens Demo](https://raw.githubusercontent.com/oxfaysal/privacy_lens/main/assets/masonry_demo.jpg)
+![Privacy Lens Demo](https://raw.githubusercontent.com/oxfaysal/privacy_lens/refs/heads/main/assets/privacylens_demo.png)
 
 ## 📥 Installation
 
