@@ -13,6 +13,9 @@
 
 ---
 
+## Preview
+![Privacy Lens Demo](https://raw.githubusercontent.com/oxfaysal/privacy_lens/main/assets/masonry_demo.jpg)
+
 ## 📥 Installation
 
 Add `privacy_lens` to your `pubspec.yaml` file:

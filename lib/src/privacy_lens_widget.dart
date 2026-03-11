@@ -19,7 +19,6 @@ class PrivacyLens extends StatefulWidget {
 }
 
 class _PrivacyLensState extends State<PrivacyLens> with WidgetsBindingObserver {
-  static const _channel = MethodChannel('privacy_lens_channel');
   bool _isBackgrounded = false; // App lifecycle state
 
   @override
@@ -65,7 +64,7 @@ class _PrivacyLensState extends State<PrivacyLens> with WidgetsBindingObserver {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: widget.blurStrength, sigmaY: widget.blurStrength),
-              child: Container(color: Colors.black.withOpacity(0.01)),
+              child: Container(color: Colors.black.withValues(alpha: 0.01),),
             ),
           ),
       ],
