@@ -1,0 +1,16 @@
+name: privacy_lens_example
+description: An example application for the privacy_lens package.
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  privacy_lens:
+    path: ../ # এটি আপনার মেইন প্যাকেজকে লিঙ্ক করবে
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
