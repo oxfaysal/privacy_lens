@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   privacy_lens:
-    path: ../ # এটি আপনার মেইন প্যাকেজকে লিঙ্ক করবে
+    path: ../
 
 dev_dependencies:
   flutter_test:
