@@ -14,7 +14,7 @@
 ---
 
 ## Preview
-![Privacy Lens Demo](https://raw.githubusercontent.com/oxfaysal/privacy_lens/refs/heads/main/assets/privacylens_demo.png)
+<img src="https://raw.githubusercontent.com/oxfaysal/privacy_lens/refs/heads/main/assets/privacylens_demo.png" alt="Privacy Lens Demo" width="400" />
 
 ## 📥 Installation
 
