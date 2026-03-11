@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(title: const Text("Privacy Lens Example")),
         body: Center(
           child: PrivacyLens(
-            isProtected: true,
-            blurStrength: 10.0,
+            isProtected: true, // Always blur for demonstration OR false = only blur when app is backgrounded
+            blurStrength: 10.0, // Adjust blur strength as needed
             child: const Text(
               "Sensitive Data: 1234-5678-9012",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
