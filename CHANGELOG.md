@@ -1,3 +1,9 @@
+## 1.0.4
+
+* **Fixed:** Resolved `Platform support` score by correctly nesting `Package.swift` files within the `ios/privacy_lens/` and `macos/privacy_lens/` directories to meet Swift Package Manager (SPM) requirements.
+* **Improved:** Updated project structure for better compatibility with modern Flutter package standards.
+
+
 ## 1.0.3
 
 * **Added:** Full support for **Swift Package Manager (SPM)** on iOS and macOS platforms.

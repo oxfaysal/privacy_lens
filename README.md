@@ -24,7 +24,7 @@ Add `privacy_lens` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  privacy_lens: ^1.0.3
+  privacy_lens: ^1.0.4
 ```
 
 Then, run the following command in your terminal:
