@@ -1,3 +1,11 @@
+## 1.0.3
+
+* **Added:** Full support for **Swift Package Manager (SPM)** on iOS and macOS platforms.
+* **Improved:** Added `Package.swift` files for modern dependency management.
+* **Updated:** Configured `podspec` to meet current Flutter plugin standards.
+* **Fixed:** Resolved `Platform support` warnings on `pub.dev` to ensure 20/20 platform score.
+* **General:** Internal project structure optimizations for better maintainability.
+
 ## 1.0.2
 
 * **Added:** `overlayColor` property to customize the tint color over the blurred content.
