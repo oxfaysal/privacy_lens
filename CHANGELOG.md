@@ -1,3 +1,12 @@
+## 1.0.2
+
+* **Added:** `overlayColor` property to customize the tint color over the blurred content.
+* **Added:** `privacyChild` property to display custom widgets (e.g., logos, icons, or text) when blurred.
+* **Added:** `enableInDebug` flag to optionally disable the blur effect during development.
+* **Added:** Smooth blur transitions using `TweenAnimationBuilder` for a better user experience.
+* **Added:** `animationDuration` property to control the speed of the blur fade-in/out effect.
+* **Improved:** Updated the example project with an interactive UI to showcase all new features.
+
 ## 1.0.1
 
 * **Fixed:** Resolved `unused_field` warning by removing unnecessary `MethodChannel` reference.
