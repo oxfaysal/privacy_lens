@@ -1,35 +1,83 @@
 import 'dart:ui';
-import 'package:flutter/foundation.dart'; // kReleaseMode 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// Defines the visual style of the privacy protection layer.
+enum PrivacyBlurType { 
+  /// Standard Gaussian blur effect.
+  gaussian, 
+  
+  /// Pixelated mosaic effect for a retro or censored look.
+  pixelate, 
+  
+  /// A frosted glass effect with higher opacity for a premium UI feel.
+  frosted 
+}
 
-/// A widget that protects sensitive content by applying a blur filter.
-/// [PrivacyLens] can automatically blur content when the app lifecycle 
-/// changes to inactive/paused, or it can be manually triggered via [isProtected].
+/// A controller used to programmatically trigger privacy protection across 
+/// multiple [PrivacyLens] widgets simultaneously (Scoped Protection).
+class PrivacyLensController extends ChangeNotifier {
+  bool _isGlobalProtected = false;
 
+  /// Returns whether the global protection is currently active.
+  bool get isGlobalProtected => _isGlobalProtected;
+
+  /// Activates the protection layer.
+  void show() {
+    if (!_isGlobalProtected) {
+      _isGlobalProtected = true;
+      notifyListeners();
+    }
+  }
+
+  /// Deactivates the protection layer.
+  void hide() {
+    if (_isGlobalProtected) {
+      _isGlobalProtected = false;
+      notifyListeners();
+    }
+  }
+
+  /// Toggles the protection layer state.
+  void toggle() {
+    _isGlobalProtected = !_isGlobalProtected;
+    notifyListeners();
+  }
+}
+
+/// A widget that protects sensitive UI content by applying customizable filters.
+/// 
+/// It automatically blurs when the app is backgrounded or when manually 
+/// triggered via [isProtected] or a [PrivacyLensController].
 class PrivacyLens extends StatefulWidget {
-  /// The widget to be protected.
+  /// The widget tree to be protected.
   final Widget child;
 
-  /// If set to true, the [child] will always be masked with a blur effect.
+  /// Manually force the protection layer to be active.
   final bool isProtected;
 
-  /// The intensity of the blur effect. Defaults to 10.0.
+  /// The intensity of the blur/filter effect. Defaults to 10.0.
   final double blurStrength;
 
-  /// The color of the overlay applied on top of the blur.
+  /// The color of the overlay applied over the filter.
   final Color overlayColor;
 
-  /// An optional widget to display in the center when the content is blurred.
-  final Widget? privacyChild; 
+  /// A widget (e.g., an icon or logo) to display when protection is active.
+  final Widget? privacyChild;
 
-  /// Whether the protection should be active during debug mode. Defaults to true for development convenience.
-  final bool enableInDebug; 
-  
-  /// The duration of the blur animation transition. Defaults to 300 milliseconds.
-  final Duration animationDuration; 
+  /// If false, protection is disabled during development (debug mode).
+  final bool enableInDebug;
 
-/// Creates a [PrivacyLens] widget.
+  /// The speed of the transition animation.
+  final Duration animationDuration;
+
+  /// The visual style of the protection (e.g., gaussian, pixelate, frosted).
+  final PrivacyBlurType blurType;
+
+  /// An optional controller to manage protection state externally.
+  final PrivacyLensController? controller;
+
+  /// Creates a [PrivacyLens] widget.
   const PrivacyLens({
     super.key,
     required this.child,
@@ -39,6 +87,8 @@ class PrivacyLens extends StatefulWidget {
     this.privacyChild,
     this.enableInDebug = true,
     this.animationDuration = const Duration(milliseconds: 300),
+    this.blurType = PrivacyBlurType.gaussian,
+    this.controller,
   });
 
   @override
@@ -52,59 +102,73 @@ class _PrivacyLensState extends State<PrivacyLens> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    widget.controller?.addListener(_handleControllerUpdate);
+  }
+
+  void _handleControllerUpdate() {
+    if (mounted) setState(() {});
   }
 
   @override
   void didUpdateWidget(PrivacyLens oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.isProtected != widget.isProtected) {
-      setState(() {});
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerUpdate);
+      widget.controller?.addListener(_handleControllerUpdate);
     }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _isBackgrounded = (state == AppLifecycleState.inactive || state == AppLifecycleState.paused);
-    });
+    if (mounted) {
+      setState(() {
+        _isBackgrounded = (state == AppLifecycleState.inactive || state == AppLifecycleState.paused);
+      });
+    }
   }
 
   @override
   void dispose() {
+    widget.controller?.removeListener(_handleControllerUpdate);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // debug mode check for development convenience, can be disabled via enableInDebug
+    // Check if protection should be skipped in debug mode
     if (!kReleaseMode && !widget.enableInDebug) {
       return widget.child;
     }
 
-    final bool shouldBlur = widget.isProtected || _isBackgrounded;
+    final bool isControllerProtected = widget.controller?.isGlobalProtected ?? false;
+    final bool shouldBlur = widget.isProtected || _isBackgrounded || isControllerProtected;
 
     return Stack(
       children: [
         widget.child,
-        // 3. animated blur effect with customizable duration
         TweenAnimationBuilder<double>(
           tween: Tween<double>(begin: 0, end: shouldBlur ? widget.blurStrength : 0),
           duration: widget.animationDuration,
           builder: (context, blurValue, child) {
             if (blurValue <= 0) return const SizedBox.shrink();
-            
+
             return Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: blurValue, sigmaY: blurValue),
-                child: Container(
-                  color: widget.overlayColor.withValues(alpha: 0.01),
-                  child: Center(
-                    // 2 custom child with fade-in effect when blur is active
-                    child: AnimatedOpacity(
-                      opacity: blurValue >= widget.blurStrength ? 1.0 : 0.0,
-                      duration: widget.animationDuration,
-                      child: widget.privacyChild ?? const SizedBox.shrink(),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: _getFilter(blurValue),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: widget.blurType == PrivacyBlurType.frosted
+                          ? widget.overlayColor.withValues(alpha: 0.2)
+                          : widget.overlayColor.withValues(alpha: 0.01),
+                    ),
+                    child: Center(
+                      child: AnimatedOpacity(
+                        opacity: blurValue >= (widget.blurStrength * 0.8) ? 1.0 : 0.0,
+                        duration: widget.animationDuration,
+                        child: widget.privacyChild ?? const SizedBox.shrink(),
+                      ),
                     ),
                   ),
                 ),
@@ -114,5 +178,21 @@ class _PrivacyLensState extends State<PrivacyLens> with WidgetsBindingObserver {
         ),
       ],
     );
+  }
+
+  /// Generates the appropriate filter based on the selected [PrivacyBlurType].
+  ImageFilter _getFilter(double value) {
+    switch (widget.blurType) {
+      case PrivacyBlurType.pixelate:
+        // Current matrix implementation for basic pixelation simulation
+        return ImageFilter.matrix(
+          Matrix4.diagonal3Values(1 / (value + 1), 1 / (value + 1), 1).storage,
+          filterQuality: FilterQuality.none,
+        );
+      case PrivacyBlurType.frosted:
+      case PrivacyBlurType.gaussian:
+      default:
+        return ImageFilter.blur(sigmaX: value, sigmaY: value);
+    }
   }
 }

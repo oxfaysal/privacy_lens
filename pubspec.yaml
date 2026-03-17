@@ -1,6 +1,6 @@
 name: privacy_lens
 description: A lightweight Flutter widget to mask sensitive data from screen captures and recordings.
-version: 1.0.4
+version: 1.0.5
 homepage: https://github.com/oxfaysal/privacy_lens
 repository: https://github.com/oxfaysal/privacy_lens
 issue_tracker: https://github.com/oxfaysal/privacy_lens/issues

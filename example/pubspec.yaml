@@ -1,6 +1,6 @@
 name: privacy_lens_example
 description: An example application for the privacy_lens package.
-version: 1.0.0
+version: 1.0.5
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

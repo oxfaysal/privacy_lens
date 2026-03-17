@@ -1,3 +1,15 @@
+## 1.0.5
+
+* **Added:** `PrivacyLensController` for programmatically managing protection state across multiple widgets (Scoped Protection).
+* **Added:** `PrivacyBlurType` enum to choose between different visual styles: `gaussian`, `pixelate`, and `frosted` (premium glass effect).
+* **Added:** Support for `frosted` glass effect with a specialized overlay tint logic.
+* **Added:** Matrix-based `pixelate` filter for a mosaic-style privacy look.
+* **Improved:** Enhanced transition logic for the `privacyChild` widget with coordinated opacity animations.
+* **Improved:** Updated documentation comments (Dart Doc) for all public members to improve `pub.dev` documentation score.
+* **Updated:** Example project with interactive controls for real-time testing of controllers and blur styles.
+
+
+
 ## 1.0.4
 
 * **Fixed:** Resolved `Platform support` score by correctly nesting `Package.swift` files within the `ios/privacy_lens/` and `macos/privacy_lens/` directories to meet Swift Package Manager (SPM) requirements.
